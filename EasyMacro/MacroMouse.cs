@@ -4,21 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace CodeGenerater.Utility.EasyMacro
 {
-	public class MacroMouse
+	public class MacroMouse : IDisposable
 	{
 		#region Enum
-		public enum MMouseButton
-		{
-			Left = 1,
-			Right = 2,
-			Middle = 4,
-			X1 = 5,
-			X2 = 6,
-			L = Left,
-			R = Right,
-			M = Middle
-		}
-
 		private enum MouseEvent
 		{
 			MOUSEEVENTF_ABSOLUTE = 0x8000,
@@ -39,12 +27,14 @@ namespace CodeGenerater.Utility.EasyMacro
 		#region Constructor
 		private MacroMouse()
 		{
-
+			KeyHolder = new KeyHolder<MMouseButton>(b => Down(b));
 		}
 		#endregion
 
 		#region Field
 		static MacroMouse Instance;
+
+		KeyHolder<MMouseButton> KeyHolder;
 		#endregion
 
 		#region Property
@@ -149,7 +139,7 @@ namespace CodeGenerater.Utility.EasyMacro
 			}
 		}
 		#endregion
-		//SmoothMove
+
 		#region Method
 		public MacroMouse Down(MMouseButton Button)
 		{
@@ -177,8 +167,20 @@ namespace CodeGenerater.Utility.EasyMacro
 			return this;
 		}
 
+		public MacroMouse KeepDown(MMouseButton Button, TimeSpan Time)
+		{
+			Down(Button);
+
+			KeyHolder.Regist(Button, Time);
+
+			return this;
+		}
+
 		public MacroMouse Up(MMouseButton Button)
 		{
+			if (KeyHolder.IsRegist(Button))
+				KeyHolder.Unregist(Button);
+
 			switch (Button)
 			{
 				case MMouseButton.Left:
@@ -269,6 +271,11 @@ namespace CodeGenerater.Utility.EasyMacro
 			StaticFunction.mouse_event((int)E, 0, 0, dwData, IntPtr.Zero);
 
 			return this;
+		}
+
+		public void Dispose()
+		{
+			KeyHolder.Dispose();
 		}
 		#endregion
 	}

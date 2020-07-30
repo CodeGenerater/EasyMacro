@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
+    <Compile Include="KeyHolder.cs" />
+    <Compile Include="MMouseButton.cs" />
     <Compile Include="MPoint.cs" />
     <Compile Include="MacroKeyboard.cs" />
     <Compile Include="MacroMouse.cs" />
