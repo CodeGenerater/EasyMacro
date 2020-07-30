@@ -338,3 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/AutoClicker
+/Temp
+/EasyMacro_Test/EasyMacro_Test.csproj
+/EasyMacro_Test/Program.cs
+/EasyMacro_Test
